@@ -1,11 +1,10 @@
-pipeline {
-    agent any
-    
-    stages {
-        stage('Create Deployment YAML') {
-            steps {
-                script {
-                    def deploymentYamlContent = """
+pipeline:
+  agent: any
+  stages:
+    - stage: 'Create Deployment YAML'
+      steps:
+        - script:
+            def deploymentYamlContent = """
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -26,15 +25,11 @@ spec:
           ports:
             - containerPort: 8086
 """
-                    writeFile file: 'k0s-deployment.yaml', text: deploymentYamlContent
-                }
-            }
-        }
-        
-        stage('Create Service YAML') {
-            steps {
-                script {
-                    def serviceYamlContent = """
+            writeFile file: 'k0s-deployment.yaml', text: deploymentYamlContent
+    - stage: 'Create Service YAML'
+      steps:
+        - script:
+            def serviceYamlContent = """
 apiVersion: v1
 kind: Service
 metadata:
@@ -48,16 +43,12 @@ spec:
       port: 9096
       targetPort: 9000  
 """
-                    writeFile file: 'service-deployment.yaml', text: serviceYamlContent
-                }
-            }
-        }
-    }
-    
-    post {
-        success {
-            archiveArtifacts artifacts: 'k0s-deployment.yaml', onlyIfSuccessful: true
-            archiveArtifacts artifacts: 'service-deployment.yaml', allowEmptyArchive: true
-        }
-    }
-}
+            writeFile file: 'service-deployment.yaml', text: serviceYamlContent
+  post:
+    success:
+      - archiveArtifacts:
+          artifacts: 'k0s-deployment.yaml'
+          onlyIfSuccessful: true
+      - archiveArtifacts:
+          artifacts: 'service-deployment.yaml'
+          allowEmptyArchive: true
