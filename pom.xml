@@ -66,4 +66,9 @@
         </dependency>
         <!-- Internal Dependencies -->
         <dependency>
-            <groupId>io.javatab.microservices.api</groupId
+            <groupId>io.javatab.microservices.api</groupId>
+            <artifactId>course-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+</project>
